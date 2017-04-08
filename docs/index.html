@@ -26,14 +26,14 @@
 <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2017</h1>
 <h1 align="middle">Final Project Proposal</h1>
 <h2 align="middle">Karthik Shanmugam and David Niu</h2>
-<h3 align="middle"> Insert 2-3 sentences of awesomeness </h3>
+<h3 align="middle">Planit: Rendering Procedurally Generated Planets</h3>
 <br><br>
 
 <div>
 
 <h2 align="middle">Problem Description</h2>
 <p>Here you should provide the context for your idea. Describe the problem that you are trying to solve, why it is important, where it is challenging. Give us a general idea on how you are going to solve it.</p>
-<p>We want to solve the problem of planet generation. Given the texture for a planet, we want to procedurally generate a realistic looking planned, with terrain deformations at large and small scales. This is important because it allows for realistic looking worlds at multiple scales, which is especially useful in games such as open world games. One challenge is procedurally generating realistic looking terrain. We need to generate terrain that matches with the provided planet texture. For example the oceans should remain flat and maybe contain waves, whereas the land should have more significant bumps and craters. Another challenge is rendering the generated terrain at multiple scales. Ideally a planet should contain detail even when we zoom in. For example we want an earth size planet to contain not only mountain size bumps, but also plenty of distortions closer to the size of a person. However, generating an entire planet mesh with all these distortions would lead to an infeasibly large planet mesh. We intend to solve this issue by dynamically generating a mesh given our camera location and resolution, only computing the details for parts of the planet that will be visible to the camera.</p>
+<p>We want to solve the problem of planet generation. Given the texture for a planet, we want to procedurally generate a realistic looking planet, with terrain deformations at large and small scales. This is important because it allows for realistic looking worlds at multiple scales, which is especially useful in games such as open world games. This large scale graphical challenge is prominent since games and models are growing increasingly large in scope and size, making it impractical to individually create planets or entitites. One challenge we will face is procedurally generating realistic looking terrain. We need to generate terrain that matches with the provided planet texture. For example the oceans should remain flat and maybe contain waves, whereas the land should have more significant recursive bumps and craters. Another challenge is rendering the generated terrain at multiple scales. Ideally a planet should contain detail even when we zoom in. For example we want an earth sized planet to contain not only mountain size bumps, but also plenty of distortions closer to the size of a person. However, generating an entire planet mesh with all these distortions would lead to an infeasibly large planet mesh. We intend to solve this issue by dynamically generating a mesh given our camera location, zoom, and resolution, only computing the details for parts of the planet that will be visible to the camera.</p>
 
 <h2 align="middle">Goals and Deliverables</h2>
 <p>
@@ -44,22 +44,22 @@ Define how you will measure the quality / performance of your system (e.g. graph
 What questions do you plan to answer with your analysis?
 You should break this section into two parts: (1) what you plan to deliver, and (2) what you hope to deliver. In (1), describe what you believe you must accomplish to have a successful project and achieve the grade you expect (i.e. your baseline plan -- planning for some unexpected problems would make sense). In (2), describe what you hope to achieve if things go well and you get ahead of schedule (your aspirational plan).</p>
 
-<p>We want to render multiple images of a planet. The images should clearly show realistic deformations on the sphere representing the planet, as well as possibly different materials for different types of terrain (water, grass, sand, etc.). We also want to render multiple images centered at the same part of the planet at different zoom levels, showing deformations at small and large scales. We hope to be able to procedurally generate the planet textures as well</p>
+<p>We want to render multiple images of a planet. The images should clearly show realistic deformations on the sphere representing the planet, as well as possibly different materials for different types of terrain (water, grass, sand, etc.). We also want to render multiple images centered at the same part of the planet at different zoom levels, showing deformations at small and large scales. We hope to be able to procedurally generate the planet textures as well, allowing for a wide variety of different looking planets to be created based on just a few input seed conditions and variables.</p>
+<p>We plan to deliver the most basic of our project, a procedurally generated planet that is rendered with textures and has different materials and surface deformations. Our stretch goals will be to add more and different resolutions as well as having differing reactions to how different materials react to light in being rendered, in addition to implementing an atmosphere and clouds for our planets which will also affect the lighting and colors of the planet.</p>
+<p>A demo of our project will involve first letting users manually pick a texture to map onto our planet and then generating the result to show that there is an interactive component to it. After that, we will show a procedurally generated texture map and how that will affect the surface of the planet after it is mapped on. Finally, when we have created a fully rendered planet, we will use different zoom distances to show the intricate detail of bumps and dips on the surface.</p>
 
 <h2 align="middle">Schedule</h2>
-<p>In this section you should organize and plan the tasks and subtasks that your team will execute. Since presentations are ~4 weeks from the due-date of the proposal, you should include a set of tasks for every week</p>
-
-<p>week 1: set up environment to render a sphere with texture, maybe add materials for water and not water</p>
-
-<p>week 2: get bumps and craters and other terrain at the largest scale working</p>
-<p>week 3: implement a system to generate our planet mesh right before rendering given camera info.</p>
-<p>week 4: get shit working lol</p>
+<p>Week 1: Set up environment to be able to properly render a planet with texture. Start working on different materials, with the most important being water since we assume it is an earth-like planet</p>
+<p>Week 2: Get bumps and craters as well as other terrain working correctly on a large scale on the planet. Create the algorithm to procedurally generate different textures</p>
+<p>Week 3: Implement a system to generate our planet mesh right before rendering given camera info and properly instantiate other different materials and responses to detailed zoom distances and resolutions</p>
+<p>Week 4: Debug and finish. Create an atmosphere and clouds for the planet which will affect how lighting works when rendered</p>
 
 <h2 align="middle">Resources</h2>
-<p>List what resources, e.g. books, papers and/or online resources that are references for your project. List the computing platform, hardware and software resources that you will use for your project. You have a wide latitude here to use what you have access to, but be aware that you will have to support and trouble-shoot on your platform yourselves. If you are starting from an existing piece of code or system, describe and provide a pointer to it here.</p>
-
-<a href="https://smcameron.github.io/space-nerds-in-space/earthlike/example/slideshow.html">This website</a>
-<a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/">Also this website</a>
-
+<p>We intend to do most of our work on the Linux computers in soda349 and be mostly building off of our code from the previous projects in this class</p>
+<a href="https://smcameron.github.io/space-nerds-in-space/earthlike/example/slideshow.html">This website is our primary source for how to procedurally generate and render an image</a><br>
+<a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/">This website has a very interesting method of procedurally generating a polygon map</a><br>
+<a href="http://www.nvidia.com/object/tessellation.html">NVIDIA's website talks about tesselation and displacement mapping and is a useful resource</a><br>
+<a href="https://www.graphics.rwth-aachen.de/media/papers/sqrt31.pdf">This paper details the sqrt3 subdivision which may be helpful</a><br>
+<a href="http://www.cise.ufl.edu/research/SurfLab/papers/09bi3c2polar.pdf">This paper details polar subdivision which we may also use</a>
 </body>
 </html>
