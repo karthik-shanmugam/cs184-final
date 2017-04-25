@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184 Final Project</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2017</h1>
+<h1 align="middle">Final Project Milestone</h1>
+<h2 align="middle">Karthik Shanmugam and David Niu</h2>
+<h3 align="middle">Planit: Rendering Procedurally Generated Planets</h3>
+<br><br>
+<div>
+
+<center><img src="earth_texture.png" align="bottom" width="400px"/></center>
+<center><p>A default test planet with the Earth's color, specular, and normal map</p></center>
+
+
+<h2 align="middle">Accomplished</h2>
+<p>Unfortuantely, we are not quite at the benchmark that we set for ourself at the beginning of our project. So far, we have only managed to start development in three.js and do the most basic of creating a sphere, and projecting a map texture on it. For rendering the image, we require 3 texture maps, a color map, a normal map, and a specular shading map. We hope to keep working forward to implement procedurally generating a color map with perlin noise. With perlin noise as a random factor, we plan to use it to generate our color maps by calculating elevations and moisture levels and coloring the texture map by sorting and coloring by biome. Surface elevation and normals will also be generated through perlin noise, although we will use some mathematical manipulations on it such as changing the frequencies and octaves for a more realistic look.</p>
+<h2 align="middle">Preliminary Results</h2>
+
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="fail1.bmp" align="middle" width="400px"/>
+        <figcaption align="middle">First attempt of generating a random color map with little water. Looks very unrealistic!</figcaption>
+      </td>
+      <td>
+        <img src="fail2.bmp" align="middle" width="400px"/>
+        <figcaption align="middle">More water. Note how random is a bad choice for procedural generation. As there doesn't appear to be any clumps of land</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="perlin_noise.png" align="middle" width="400px"/>
+        <figcaption align="middle">Instead, we decided to use perlin noise as a way to generate random sample for the surface (color not yet added)</figcaption>
+      </td>
+      <td>
+        <img src="perlin_noise_elevation.png" align="middle" width="400px"/>
+        <figcaption align="middle">We also experimented with using Perlin noise as a way to change surface elevations by changing their octaves for fractal-like structures</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+<p>[images, videos, slides go here]</p>
+<h2 align="middle">Reflection</h2>
+<p>Doing this final project has really opened our eyes and made us realize that development was not as easy or smooth as we hoped. Since the beginning we had to discuss to choose a platform and code database for our project to run on, and we experimented with many approaches like building off the CS184 class projects or writing our own from scratch. We also spent some time deciding what language we would do development in. Finally, we agreed on three.js for a flexible Javascript API with a decent 3D library to do this project in. three.js is a very powerful library and we got a lot of inspiration from the examples of other projects done in it. Even then, we were initially caught off guard on how to begin, and we've spent quite a few days deciding how to start, from how to render the planet to how to use perlin noise to procedurally generate texture maps. This project was extremeley eye-opening in how code development is not straight-forward and our goals and ideas would often have to be tweaked as we grew more familiar with the constraints and capabilities of our tools.</p>
+<h2 align="middle">Updated Work Plan</h2>
+<p>In our initial schedule plan, we were supposed to set up the environment and get bumps and craters working by the two week deadline. Because we spent more time than we had planned choosing a platform to get started on, we are unfortunately a bit behind schedule. As it stands now, we may have to cut back on some flashier features such as dynamic rendering at different zoom levels or atmosphere and clouds affecting lighting. After spending some time working with three.js and seeing how powerful its shaders are, we want to dedicate most of our time and energy now to making sure we properly generate perlin noise and manipulate it into creating good looking color and elevation textures for our planet.</p>
+</body>
+</html>
