@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184 Final Project</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2017</h1>
+<h1 align="middle">Final Project Report</h1>
+<h2 align="middle">Karthik Shanmugam and David Niu</h2>
+<a href="http://karthiks.me/planet-generator/"><h1 align="middle">Planit: Rendering Procedurally Generated Planets</h1></a>
+<br><br>
+<div>
+
+<center><img src="final_result.png" align="bottom" width="400px"/></center>
+<center><p>The final result of our project</p></center>
+
+
+<h2 align="middle">Abstract</h2>
+<p>Our final project is able to procedurally generate and render various earthlike planets by using a seed to randomize initial conditions. Different parts of the planet are selected by a combination of simplex and perlin noise sampling and we use a variety of shaders to separate and shade the surface of our planet in a way that divides areas in realistic biomes with differences in color. Additionally, we have implemented some minor aesthetic features like rotation, a starry background, and an atmosphere that fades in and out of view depending on the camera distance. Furthermore, as a proof of concept, we have also created certain appearances that only appear when the camera is extremeley zoomed up, but does not show up when seen from far away.</p>
+
+<h2 align="middle">Technical Approach</h2>
+<h3 align="middle">Noise generation</h3>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="fail1.bmp" align="middle" width="400px"/>
+        <figcaption align="middle">First attempt of generating a random color map with little water. Looks very unrealistic!</figcaption>
+      </td>
+      <td>
+        <img src="fail2.bmp" align="middle" width="400px"/>
+        <figcaption align="middle">More water. Note how random is a bad choice for procedural generation. As there doesn't appear to be any clumps of land</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="perlin_noise.png" align="middle" width="400px"/>
+        <figcaption align="middle">Instead, we decided to use perlin noise as a way to generate random sample for the surface (color not yet added)</figcaption>
+      </td>
+      <td>
+        <img src="perlin_noise_elevation.png" align="middle" width="400px"/>
+        <figcaption align="middle">We also experimented with using Perlin noise as a way to change surface elevations by changing their octaves for fractal-like structures</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+<p>We experimented with various random noises in order to affect the surface of our planet. Our first approach, complete randomness did not work out very well but taught us the importance of why perlin noise is used instead. Perlin noise isn't completely random, but it looks good since there are areas where high or low values gather together so there is some pattern that is useful for developing things like islands or continents. We used perlin noise by stacking multiple layers of it, varying frequencies and amplitiudes at different levels. This layering and changing octaves resulted in a look that was a lot more realistic and aestehtically pleasing than just using one layer. Later on in the project, we also added in simplex noise as a more complex variant. We also discussed using the noise function to generate terrain and bump mapping or displacement mapping, but ultimately decided against it as our sphere had a limited number of vertices and we decided to stick with a pixel shader instead.</p>
+<h3 align="middle">Color</h3>
+<center><img src="color.png" align="bottom" width="400px"/></center>
+<center><p>A view of our planet showing off all five our final biomes</p></center>
+<p>Since the noise functions gave us a black and white image, we needed a way to add color to our planet. We wanted the planet to be earth-like, so we decided that the majority of the planet should be water. we did this by getting an elevation value for each pixel by using simplex noise at each sampled point and classifying it as water if it was under 0.1 and land otherwise. We later added more biomes such as rainforests, mountains, and tundras, but ultimately having too many biomes ended up making the planet look silly and unrealistic, so we cut it down to just water, coast, land, rainforest, and mountains. Each biome has its own variations of color due to noise, but for the most part, they're centered arounda certain colors, such as coast being yellow, rainforests being a darker green, and mountains being almost white due to having icy peaks.</p>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="perlin_noise_color.png" align="middle" width="400px"/>
+        <figcaption align="middle">Our first attempt at color. An binary check of land (green) or water (blue)</figcaption>
+      </td>
+      <td>
+        <img src="mangos.png" align="middle" width="400px"/>
+        <figcaption align="middle">Experimenting with shading and different colors at different locations for a more varied look. We ultimately abandoned this since it was difficult and unrealistic</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="coast_lines.png" align="middle" width="400px"/>
+        <figcaption align="middle">Our first step in biome creation, a sandy coastline for areas bordering water areas</figcaption>
+      </td>
+      <td>
+        <img src="biomes.png" align="middle" width="400px"/>
+        <figcaption align="middle">Going overboard with overboard with biomes looks unrealistic so we cut it down to just five</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+<h3 align="middle">Atmosphere and Lighting</h3>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="atmosphere_added.png" align="middle" width="400px"/>
+        <figcaption align="middle">Our first attempt at an atmosphere, a transparent texture mapped sphere with opacity</figcaption>
+      </td>
+      <td>
+        <img src="atmosphere_far.png" align="middle" width="400px"/>
+        <figcaption align="middle">From far away you can see the atmosphere as a small circle around the planet</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="atmosphere_middle.png" align="middle" width="400px"/>
+        <figcaption align="middle">The atmosphere is most prominent at a middle view where a soft light blue glow surrounds the planet</figcaption>
+      </td>
+      <td>
+        <img src="atmosphere_close.png" align="middle" width="400px"/>
+        <figcaption align="middle">Zooming in closer, the atmosphere diappears completely so the planet's surface can be better seen</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+<p>For our initial atmosphere idea, we created another slightly larger sphere and mapped a texture of clouds and air currents on it. We made it transparent and have a low opacity and had it rotate slightly faster than the planet, giving an illusion of movement. However, this idea was later scrapped as the transparency of the atmosphere was static and we looked for different methods. We settled upon an article online that rendered an atmosphere by giving the planet a soft glow, and we sought to emulate that. Additionally, we looked for other planet renderings for ideas, and while looking at Google Earth, we noticed that they also rendered an atmosphere but it would disappear as the user zoomed in. We decided to implement this idea by varying the atmosphere lighting in relation to how close the planet was to the camera in the scene and this had the added benefit of adding in some user interaction by allowing them to vary some parts of the scene.</p>
+<p>At a high level, we used a phong shader for the entire planet, with ambient, specular, and diffuse lighting. Deciding ambient lighting was another task we had to come to an agreemetn to as making it too low would result in the dark side of the planet being too dark, but making it too high would make it seem unrealistic. Our specular highlight also interacts differently with different biomes, showing up quite prominently on the water, less on land, and reflecting a lot off the icy mountain tips.</p>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="specular1.png" align="middle" width="400px"/>
+        <figcaption align="middle">The specular highlight in the water</figcaption>
+      </td>
+      <td>
+        <img src="specular2.png" align="middle" width="400px"/>
+        <figcaption align="middle">As the planet (and camera) moves, the specular lighting</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="specular3.png" align="middle" width="400px"/>
+        <figcaption align="middle">The specular highlight seems to disappear over land as it is not reflective as the water is</figcaption>
+      </td>
+      <td>
+        <img src="specular4.png" align="middle" width="400px"/>
+        <figcaption align="middle">The light does reflect off icy mountain peaks however. Note the different brightness in the white area to the image on the left</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+<h3 align="middle">Space, Challenges, and Hacks</h3>
+<p>When we posted one of our early renderings to Piazza and asked for advice on making the image look more realistic, we were advised to have some starry background. To do this, we created a much larger sphere around our planet (100 times as large) and mapped a starry texture to the inside of it. We also had to tweak the renderer a bit to ensure that the planet would be rendered last so it would appear in the midst of all the stars instead of being blocked by it.</p>
+<p>One interesting bug we discovered while working with atmosphers resulted in the lighting getting progressively weirder as the planet rotated. This turned out to be because we forgot to change between world and camera coordinates in our calculations.</p>
+<p>Finally, our seed function essentially just shifts the elevation and noise map by a set amount, so setting the seed value to extremely high values or non integer values results in weird jagged terrain.</p>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="space.png" align="middle" width="400px"/>
+        <figcaption align="middle">In our model, there is indeed an edge to space</figcaption>
+      </td>
+      <td>
+        <img src="lighting_bug.png" align="middle" width="400px"/>
+        <figcaption align="middle">A fairly interesting lighting bug caused by having two sets of coordinates</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="squares.png" align="middle" width="400px"/>
+        <figcaption align="middle">Certain seeds will cause land masses to look quite abnormal</figcaption>
+      </td>
+      <td>
+        <img src="squares2.png" align="middle" width="400px"/>
+        <figcaption align="middle">Same planet and seed, different view</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+<h3 align="middle">Extreme Zoom</h3>
+<p>In our early design docs and plans, we had hoped to create different textures at different levels of zoom so as to achieve a lot more detail when closer to the surface. We didn't have enough time to create complicated elevations or different textures, but we did manage to create some pixels that would only show up at a high level of zoom. This was also built into the shader and we would simply not render the pixels unless the camera is sufficiently close. Right now, the pixels don't make much sense and only show up in the rainforest biome, but for future expansions, these small disturbances can be used for things like buildings or surface elevation disturbances.</p>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="zoom1.png" align="middle" width="400px"/>
+        <figcaption align="middle">At this level of zoom, there is no extra details anywhere on the planet</figcaption>
+      </td>
+      <td>
+        <img src="zoom2.png" align="middle" width="400px"/>
+        <figcaption align="middle">It's hard to see in this image, but tiny little brown dots appear in the rainforest biome with this level of zoom</figcaption>
+      </td>
+    </tr>
+    </tr>
+    <tr>
+      <td>
+        <img src="zoom3.png" align="middle" width="400px"/>
+        <figcaption align="middle">At a higher level of zoom, the brown dots become more prominent</figcaption>
+      </td>
+      <td>
+        <img src="zoom4.png" align="middle" width="400px"/>
+        <figcaption align="middle">This is how they look at a very high level of zoom</figcaption>
+      </td>
+    </tr>
+    </tr>
+  </table>
+</div>
+
+
+<h2 align="middle">Reflections</h2>
+<p>A lot of our ideas changed since the beginning, and we had to simplify a lot of our ideas. We found building a sphere and just using shaders to be simpler than trying to map a procedurally generated cube texture map on a cube and smoothing it into a sphere. Additionally, our biomes factor was a lot more simplified since we built the biomes purely based off elevation instead of other factors like moisture or distance from the closest water source.</p>
+
+<h2 align="middle">References</h2>
+<ol>
+<li>https://smcameron.github.io/space-nerds-in-space/earthlike/example/slideshow.html#1</li>
+<li>http://learningthreejs.com/blog/2013/09/16/how-to-make-the-earth-in-webgl/</li>
+<li>http://blog.mastermaps.com/2013/09/creating-webgl-earth-with-threejs.html</li>
+</ol>
+
+<h2 align="middle">Contributions</h2>
+<p>David came up with the idea for the project of a procedurally generated planet and Karthik suggested the use of Javascript and the three.js library for development. Karthik was mainly responsible for generating the noise maps and calculations involving them while David helped build the atmosphere, background, and biomes.</p>
+</body>
+</html>
