@@ -70,11 +70,17 @@
         <img src="coast_noise.png" align="middle" width="400px"/>
         <figcaption align="middle">The same idea was applied to the coast, but with different values to create differences</figcaption>
       </td>
+    <tr>
+      <td>
+        <img src="aliasing.png" align="middle" width="400px"/>
+        <figcaption align="middle">Aliasing caused by high frequency noise. This was fixed in the final version</figcaption>
+      </td>
+    </tr>
     </tr>
     </tr>
   </table>
 </div>
-<p>We experimented with various random noises in order to affect the surface of our planet. Our first approach, complete randomness did not work out very well but taught us the importance of why perlin noise is used instead. Perlin noise isn't completely random, but it looks good since there are areas where high or low values gather together so there is some pattern that is useful for developing things like islands or continents. We used perlin noise by stacking multiple layers of it, varying frequencies and amplitiudes at different levels. We imported the snoise and cnoise functions from the webgl-noise public github repository for simplex and classic perlin noise generators. This layering and changing octaves resulted in a look that was a lot more realistic and aestehtically pleasing than just using one layer. Later on in the project, we also added in simplex noise as an improved version of perlin noise and it also made the project easier to seed for procedural generation. We also discussed using the noise function to generate terrain and bump mapping or displacement mapping, but ultimately decided against it as our sphere had a limited number of vertices and we decided to stick with a pixel shader instead.</p>
+<p>We experimented with various random noises in order to affect the surface of our planet. Our first approach, complete randomness did not work out very well but taught us the importance of why perlin noise is used instead. Perlin noise isn't completely random, but it looks good since there are areas where high or low values gather together so there is some pattern that is useful for developing things like islands or continents. We used perlin noise by stacking multiple layers of it, varying frequencies and amplitiudes at different levels. We imported the snoise and cnoise functions from the webgl-noise public github repository for simplex and classic perlin noise generators. This layering and changing octaves resulted in a look that was a lot more realistic and aestehtically pleasing than just using one layer. Later on in the project, we also added in simplex noise as an improved version of perlin noise and it also made the project easier to seed for procedural generation. One issue with our approach of stacking layers of noise was that the high frequency layers would cause aliasing artifacts when zoomed out. To work around this, we only compute and render higher frequency noise when the distance between a fragment and the camera is sufficiently small. We also discussed using the noise function to generate terrain and bump mapping or displacement mapping, but ultimately decided against it as our sphere had a limited number of vertices and we decided to stick with a pixel shader instead.</p>
 <h3 align="middle">Color</h3>
 <center><img src="color.png" align="bottom" width="400px"/></center>
 <center><p>A view of our planet showing off all five of our final biomes</p></center>
