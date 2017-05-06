@@ -74,10 +74,10 @@
     </tr>
   </table>
 </div>
-<p>We experimented with various random noises in order to affect the surface of our planet. Our first approach, complete randomness did not work out very well but taught us the importance of why perlin noise is used instead. Perlin noise isn't completely random, but it looks good since there are areas where high or low values gather together so there is some pattern that is useful for developing things like islands or continents. We used perlin noise by stacking multiple layers of it, varying frequencies and amplitiudes at different levels. This layering and changing octaves resulted in a look that was a lot more realistic and aestehtically pleasing than just using one layer. Later on in the project, we also added in simplex noise as a more complex variant for color. We also discussed using the noise function to generate terrain and bump mapping or displacement mapping, but ultimately decided against it as our sphere had a limited number of vertices and we decided to stick with a pixel shader instead.</p>
+<p>We experimented with various random noises in order to affect the surface of our planet. Our first approach, complete randomness did not work out very well but taught us the importance of why perlin noise is used instead. Perlin noise isn't completely random, but it looks good since there are areas where high or low values gather together so there is some pattern that is useful for developing things like islands or continents. We used perlin noise by stacking multiple layers of it, varying frequencies and amplitiudes at different levels. We imported the snoise and cnoise functions from the webgl-noise public github repository for simplex and classic perlin noise generators. This layering and changing octaves resulted in a look that was a lot more realistic and aestehtically pleasing than just using one layer. Later on in the project, we also added in simplex noise as a more complex variant for color. We also discussed using the noise function to generate terrain and bump mapping or displacement mapping, but ultimately decided against it as our sphere had a limited number of vertices and we decided to stick with a pixel shader instead.</p>
 <h3 align="middle">Color</h3>
 <center><img src="color.png" align="bottom" width="400px"/></center>
-<center><p>A view of our planet showing off all five our final biomes</p></center>
+<center><p>A view of our planet showing off all five of our final biomes</p></center>
 <p>Since the noise functions gave us a black and white image, we needed a way to add color to our planet. We wanted the planet to be earth-like, so we decided that the majority of the planet should be water. we did this by getting an elevation value for each pixel by using simplex noise at each sampled point and classifying it as water if it was under 0.1 and land otherwise. Our idea of biomes was influenced by the arrticle on generating maps with terrain noise from redblobgames, but we did not implement a moisture map because that would add a lot more variables in our calcuations, such as calculating how close each point was to the nearest water source. We later added more biomes such as rainforests, mountains, and tundras, but ultimately having too many biomes ended up making the planet look silly and unrealistic, so we cut it down to just water, coast, land, rainforest, and mountains. Each biome has its own variations of color due to noise, but for the most part, they're centered arounda certain colors, such as coast being yellow (0.8, 0.8, 0), rainforests being a darker green (0.1, 0.5, 0.1), and mountains being almost white due to having icy peaks (1.0, 1.0, 1.0).</p>
 <center><img src="biome_code.png" align="bottom" width="400px"/></center>
 <center><p>Sample code segment for coloring in biomes</p></center>
@@ -136,9 +136,22 @@
   </table>
 </div>
 <p>For our initial atmosphere idea, we created another slightly larger sphere and mapped a texture of clouds and air currents on it. We made it transparent and have a low opacity and had it rotate slightly faster than the planet, giving an illusion of movement. However, this idea was later scrapped as the transparency of the atmosphere was static and we looked for different methods. We settled upon an the Bekk Open article that rendered an atmosphere by giving the planet a soft glow, and we sought to emulate that. Additionally, we looked for other planet renderings for ideas, and while looking at Google Earth, we noticed that they also rendered an atmosphere but it would disappear as the user zoomed in. We decided to implement this idea by varying the atmosphere lighting in relation to how close the planet was to the camera in the scene and this had the added benefit of adding in some user interaction by allowing them to vary some parts of the scene. On the technical side of things, this mean that we set the atmosphere to completely disappear when the distance was less than 0.5, a fraction for when the distance was between 0.5 and 2, and not changing it otherwise.</p>
-<center><img src="atmosphere_code.png" align="bottom" width="400px"/></center>
-<center><p>Code segment for controlling the strength of the atmosphere</p></center>
-<p>At a high level, we used a phong shader for the entire planet, with ambient, specular, and diffuse lighting. The phong shader code was pretty much taken out of our class projects as we found that it did a pretty good job of coloring the planet. Deciding ambient lighting was another task we had to come to an agreement to as making it too low would result in the dark side of the planet being too dark, but making it too high would make it seem unrealistic. Our specular highlight also interacts differently with different biomes, showing up quite prominently on the water, less on land, and reflecting a lot off the icy mountain tips.</p>
+<div align="middle">
+  <table style="width=100%">
+      <tr>
+      <td>
+        <img src="atmosphere_code.png" align="middle" width="400px"/>
+        <figcaption align="middle">Code segment for controlling the strength of the atmosphere</figcaption>
+      </td>
+      <td>
+        <img src="phong_shader.png" align="middle" width="400px"/>
+        <figcaption align="middle">Our phong shader lifted straight out of project 2</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p>At a high level, we used a phong shader for the entire planet, with ambient, specular, and diffuse lighting. The phong shader code was pretty much taken out of our class projects as we found that it did a pretty good job of coloring the planet. Deciding ambient lighting was another task we had to come to an agreement to as making it too low would result in the dark side of the planet being too dark to see, but making it too high would make it seem unrealistic. Our specular highlight also interacts differently with different biomes, showing up quite prominently on the water, less on land, and reflecting a lot off the icy mountain tips. This was done by changing the phong constants of each different biome.</p>
 <div align="middle">
   <table style="width=100%">
       <tr>
@@ -166,7 +179,7 @@
   </table>
 </div>
 <h3 align="middle">Space, Challenges, and Hacks</h3>
-<p>When we posted one of our early renderings to Piazza and asked for advice on making the image look more realistic, we were advised to have some starry background. To do this, we created a much larger sphere around our planet (100 times as large) and mapped a starry texture to the inside of it. We also had to tweak the renderer a bit to ensure that the planet would be rendered last so it would appear in the midst of all the stars instead of being blocked by it.</p>
+<p>When we posted one of our early renderings to Piazza and asked for advice on making the image look more realistic, we were advised to have some starry background. In one of the tutorial blogs on three.js, it was mentioned that a texture mapped larger sphere can easily function as a background. To do this, we created a much larger sphere around our planet (100 times as large) and mapped a starry texture to the inside of it. We also had to tweak the renderer a bit to ensure that the planet would be rendered last so it would appear in the midst of all the stars instead of being blocked by it.</p>
 <p>One interesting bug we discovered while working with atmosphers resulted in the lighting getting progressively weirder as the planet rotated. This turned out to be because we forgot to change between world and camera coordinates in our calculations. Changing this allowed for the atmosphere to look more normal as well as allowing more freedom in how the planet rotates.</p>
 <p>Finally, our seed function essentially just shifts the elevation and noise map by a set amount, so setting the seed value to extremely high values or non integer values results in weird jagged terrain.</p>
 <div align="middle">
@@ -197,6 +210,8 @@
 </div>
 
 <h3 align="middle">Extreme Zoom</h3>
+<center><img src="house_code.png" align="bottom" width="400px"/></center>
+<center><p>Sample code for creating "houses" or other extra details on certain biomes</p></center>
 <p>In our early design docs and plans, we had hoped to create different textures at different levels of zoom so as to achieve a lot more detail when closer to the surface. We didn't have enough time to create complicated elevations or different textures, but we did manage to create some pixels that would only show up at a high level of zoom. This was also built into the shader and we would simply not render the pixels unless the camera is sufficiently close. Right now, the pixels don't make much sense and only show up in the rainforest biome, but for future expansions, these small disturbances can be used for things like buildings or surface elevation disturbances.</p>
 <div align="middle">
   <table style="width=100%">
@@ -240,11 +255,12 @@
 <li><a href="http://learningthreejs.com/blog/2013/09/16/how-to-make-the-earth-in-webgl/">How to Make the Earth in WebGL?</a> </li>
 <li><a href="http://blog.mastermaps.com/2013/09/creating-webgl-earth-with-threejs.html">Creating a WebGL Earth with three.js </a> </li>
 <li><a href="http://www.redblobgames.com/maps/terrain-from-noise/">Making maps with noise functions</a> </li>
+<li><a href="https://github.com/stegu/webgl-noise/">GLSL procedural noise functions compatible with WebGL</a> </li>
 <li><a href="https://www.clicktorelease.com/blog/experiments-with-perlin-noise/">Experiments with Perlin noise</a> </li>
 <li><a href="https://open.bekk.no/procedural-planet-in-webgl-and-three-js">Procedural Planet in WebGL and Three.js</a> </li>
 <li><a href="https://www.google.com/earth/">Google Earth</a> </li>
 </ol>
-<p>Our first source was the inspiration behind the whole project, but we ultimately decided to create it in a different way than what was suggested. Sources 2 and 3 were mostly used as tutorials for us to get familiar with three.js but they also provided some handy tips for realism like atmospheres and backgrounds. Redblobgames was also a major asset for ideas, and that is where we got the idea of generating biomes for color. The other sources were used for extra ideas and tips on how to use procedural generation to create a realistic planet in three.js.</p>
+<p>Our first source was the inspiration behind the whole project, but we ultimately decided to create it in a different way than what was suggested. Sources 2 and 3 were mostly used as tutorials for us to get familiar with three.js but they also provided some handy tips for realism like atmospheres and backgrounds. We imported the noise functions from the webgl-noise repository. Redblobgames was also a major asset for ideas, and that is where we got the idea of generating biomes for color. The other sources were used for extra ideas and tips on how to use procedural generation to create a realistic planet in three.js.</p>
 
 <h2 align="middle">Contributions</h2>
 <p>David came up with the idea for the project of a procedurally generated planet and Karthik suggested the use of Javascript and the three.js library for development. Karthik was mainly responsible for generating the noise maps and calculations involving them while David helped build the atmosphere, background, and biomes. A big thank you to the countless tutorials and reference guides to working with three.js on the internet as well as the imense details put into articles about procedural generation of planets.</p>
